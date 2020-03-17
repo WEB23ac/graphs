@@ -195,26 +195,31 @@ class Graph:
 
         This should be done using recursion.
         """
-        print('dfs_r start')
+        # print('dfs_r start')
         if visited is None:
             visited = set()
         if curr_path is None:
-            curr_path = [starting_vertex]
-        curr_vtx = curr_path[-1]
-        print('visited', visited)
-        print('curr_path', curr_path)
-        print('curr_vtx', curr_vtx)
+            curr_path = []
 
-        if curr_vtx not in visited:
-            visited.add(curr_vtx)
-            if curr_vtx == destination_vertex:
-                print('dfs_rec', curr_path)
-                return curr_path
+        curr_path.append(starting_vertex)
+        curr_vtx = starting_vertex
+        visited.add(curr_vtx)
+        # print('visited', visited)
+        # print('curr_path', curr_path)
+        # print('curr_vtx', curr_vtx)
+
+        if curr_vtx == destination_vertex:
+            # print('dfs_rec', curr_path)
+            return curr_path
+
+        else:
             for neighbor in self.get_neighbors(curr_vtx):
                 next_path = curr_path.copy()
-                next_path.append(neighbor)
-                self.dfs_recursive(
-                    starting_vertex, destination_vertex, visited, next_path)
+                if neighbor not in visited:
+                    new_path = self.dfs_recursive(
+                        neighbor, destination_vertex, visited, next_path)
+                    if new_path:
+                        return new_path
 
 
 if __name__ == '__main__':
@@ -275,12 +280,12 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    # print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print(graph.dfs(1, 6))
+    # print(graph.dfs(1, 6))
     print(graph.dfs_recursive(1, 6))
