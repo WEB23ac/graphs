@@ -1,6 +1,10 @@
+import random
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -44,7 +48,30 @@ class SocialGraph:
         self.friendships = {}
         # !!!! IMPLEMENT ME
 
+        # * Write a loop that calls create user the right amount of times
+
+        # Create friendships
+        # To create N friendships
+        # create a list with all possible friendship cobminations
+        # Shuffle the list, then grab the first N elements from the list
+
         # Add users
+        for i in range(num_users):
+            self.add_user(f'User {i+1}')
+
+        possible_friendships = []
+
+        for user_id in self.users:
+            for friend_id in range(user_id+1, self.last_id+1):
+                possible_friendships.append((user_id, friend_id))
+
+        random.shuffle(possible_friendships)
+
+        # Create friendships where n = avg_friendships * num_users ///2
+        # avg_friendships = total_friendships / num_users
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
 
         # Create friendships
 
@@ -59,6 +86,31 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        queue = []
+        queue.append([user_id])
+
+        # * helper function to get a user_id friends
+        # def get_friends(friendships, user_id):
+        #     friends = friendships[user_id]
+        #     return friends
+        for friend in self.friendships[user_id]:
+            path = [user_id, friend]
+            queue.append(path)
+
+        while len(queue) > 0:
+            curr_path = queue.pop(0)
+            curr_user = curr_path[-1]
+            # print(f'current user is {curr_user}')
+            # print('visited', visited)
+            if not curr_user in visited:
+                for friend in self.friendships[curr_user]:
+                    # print(f'finding {user_id}s friend, {friend}')
+                    new_path = curr_path.copy()
+                    new_path.append(friend)
+                    # print(f'the new path is {new_path}')
+                    queue.append(new_path)
+                visited[curr_user] = curr_path
+
         return visited
 
 
@@ -66,5 +118,8 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
+    for user in sg.users:
+        print('sg.users user', user)
+    # print('users in graph', sg.users)
     connections = sg.get_all_social_paths(1)
     print(connections)
