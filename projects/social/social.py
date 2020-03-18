@@ -73,8 +73,6 @@ class SocialGraph:
             friendship = possible_friendships[i]
             self.add_friendship(friendship[0], friendship[1])
 
-        # Create friendships
-
     def get_all_social_paths(self, user_id):
         """
         Takes a user's user_id as an argument
@@ -84,15 +82,10 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        visited = {}
         queue = []
         queue.append([user_id])
 
-        # * helper function to get a user_id friends
-        # def get_friends(friendships, user_id):
-        #     friends = friendships[user_id]
-        #     return friends
         for friend in self.friendships[user_id]:
             path = [user_id, friend]
             queue.append(path)
@@ -100,14 +93,10 @@ class SocialGraph:
         while len(queue) > 0:
             curr_path = queue.pop(0)
             curr_user = curr_path[-1]
-            # print(f'current user is {curr_user}')
-            # print('visited', visited)
             if not curr_user in visited:
                 for friend in self.friendships[curr_user]:
-                    # print(f'finding {user_id}s friend, {friend}')
                     new_path = curr_path.copy()
                     new_path.append(friend)
-                    # print(f'the new path is {new_path}')
                     queue.append(new_path)
                 visited[curr_user] = curr_path
 
@@ -116,10 +105,7 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(1000, 5)
     print(sg.friendships)
-    for user in sg.users:
-        print('sg.users user', user)
-    # print('users in graph', sg.users)
     connections = sg.get_all_social_paths(1)
     print(connections)
